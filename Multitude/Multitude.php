@@ -6,7 +6,7 @@ class Multitude
     private $multitude = [];
     private $delimitersRegExp = "/[\s,\-!?\(\)\.]+/";
     public function __construct(string $s){
-        $this->multitude = $this->converStringToMultitude($s);
+        $this->multitude = $this->converStringToMultitude(trim($s));
     }
     public function getMultitude(){
         return $this->multitude;
@@ -64,8 +64,13 @@ class Multitude
         return array_product($this->getMultitude());
     }
     private function converStringToMultitude(string $s){
-        $convertedString = preg_split($this->delimitersRegExp, $s);
-        $convertedString = array_map('intval', $convertedString);
+        $convertedString = preg_split($this->delimitersRegExp, $s);    
+        $this->checkMultitude($convertedString);    
         return $convertedString;
+    }
+    private function checkMultitude($array){
+        if($array  !== array_filter($array,'is_numeric')){
+            throw new \Exception("В множестве допускаются только числа");
+        }
     }
 }
